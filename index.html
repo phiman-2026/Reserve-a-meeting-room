@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจองห้องประชุม - โรงเรียนพิมานพิทยาสรรค์</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* ปรับแต่งสไตล์ปฏิทินให้ยืดหยุ่น */
+        .calendar-container {
+            position: relative;
+            padding-bottom: 56.25%; /* อัตราส่วน 16:9 */
+            height: 0;
+            overflow: hidden;
+        }
+        .calendar-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="relative bg-gradient-to-r from-red-800 via-red-700 to-amber-600 text-white py-12 px-6 text-center shadow-lg">
+        <div class="absolute inset-0 bg-black opacity-20 pointer-events-none"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <div class="flex justify-center mb-4">
+                <div class="bg-white text-red-700 p-4 rounded-full shadow-md w-16 h-16 flex items-center justify-center text-2xl font-bold">
+                    พ.พ.
+                </div>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 tracking-wide drop-shadow-md">ระบบจองห้องประชุมออนไลน์</h1>
+            <p class="text-lg md:text-xl text-amber-200 font-light">โรงเรียนพิมานพิทยาสรรค์</p>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        
+        <div class="flex flex-col sm:flex-row justify-center bg-white p-2 rounded-xl shadow-md gap-2 mb-8">
+            <button onclick="switchTab('room1')" id="btn-room1" class="tab-btn flex-1 py-3 px-4 text-center font-medium rounded-lg transition-all duration-300 bg-red-700 text-white shadow-sm">
+                <i class="fa-solid fa-hotel mr-2"></i>ห้องประชุมศรีพิมาน
+            </button>
+            <button onclick="switchTab('room2')" id="btn-room2" class="tab-btn flex-1 py-3 px-4 text-center font-medium rounded-lg transition-all duration-300 text-gray-600 hover:bg-gray-100">
+                <i class="fa-solid fa-chalkboard-user mr-2"></i>ห้องประชุมคำแสด
+            </button>
+            <button onclick="switchTab('room3')" id="btn-room3" class="tab-btn flex-1 py-3 px-4 text-center font-medium rounded-lg transition-all duration-300 text-gray-600 hover:bg-gray-100">
+                <i class="fa-solid fa-display mr-2"></i>ห้องประชุมเทาแดงรำลึก
+            </button>
+        </div>
+
+        <div id="room1" class="tab-content block animate-fadeIn">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-4 mb-6 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800"><i class="fa-solid fa-door-open text-red-600 mr-2"></i>ห้องประชุมศรีพิมาน</h2>
+                        <p class="text-sm text-gray-500 mt-1">กรุณาตรวจสอบวันเวลาที่ว่างจากปฏิทินด้านล่างก่อนกดจอง</p>
+                    </div>
+                    <a href="https://docs.google.com/forms/d/YOUR_GOOGLE_FORM_ID_1/viewform" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
+                        <i class="fa-regular fa-calendar-plus mr-2 text-lg"></i> กดจองห้องประชุมศรีพิมาน
+                    </a>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3"><i class="fa-regular fa-calendar-days text-amber-500 mr-2"></i>ปฏิทินการใช้ห้องประชุมศรีพิมาน</h3>
+                    <div class="calendar-container rounded-xl overflow-hidden border border-gray-200 shadow-inner">
+                        <iframe src="https://calendar.google.com/calendar/embed?src=YOUR_CALENDAR_ID_1%40group.calendar.google.com&ctz=Asia%2FBangkok"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="room2" class="tab-content hidden animate-fadeIn">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-4 mb-6 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800"><i class="fa-solid fa-door-open text-amber-600 mr-2"></i>ห้องประชุมคำแสด</h2>
+                        <p class="text-sm text-gray-500 mt-1">กรุณาตรวจสอบวันเวลาที่ว่างจากปฏิทินด้านล่างก่อนกดจอง</p>
+                    </div>
+                    <a href="https://docs.google.com/forms/d/YOUR_GOOGLE_FORM_ID_2/viewform" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
+                        <i class="fa-regular fa-calendar-plus mr-2 text-lg"></i> กดจองห้องประชุมคำแสด
+                    </a>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3"><i class="fa-regular fa-calendar-days text-amber-500 mr-2"></i>ปฏิทินการใช้ห้องประชุมคำแสด</h3>
+                    <div class="calendar-container rounded-xl overflow-hidden border border-gray-200 shadow-inner">
+                        <iframe src="https://calendar.google.com/calendar/embed?src=YOUR_CALENDAR_ID_2%40group.calendar.google.com&ctz=Asia%2FBangkok"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="room3" class="tab-content hidden animate-fadeIn">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-4 mb-6 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800"><i class="fa-solid fa-door-open text-blue-600 mr-2"></i>ห้องประชุมเทาแดงรำลึก</h2>
+                        <p class="text-sm text-gray-500 mt-1">กรุณาตรวจสอบวันเวลาที่ว่างจากปฏิทินด้านล่างก่อนกดจอง</p>
+                    </div>
+                    <a href="https://docs.google.com/forms/d/YOUR_GOOGLE_FORM_ID_3/viewform" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
+                        <i class="fa-regular fa-calendar-plus mr-2 text-lg"></i> กดจองห้องประชุมเทาแดงรำลึก
+                    </a>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3"><i class="fa-regular fa-calendar-days text-amber-500 mr-2"></i>ปฏิทินการใช้ห้องประชุมเทาแดงรำลึก</h3>
+                    <div class="calendar-container rounded-xl overflow-hidden border border-gray-200 shadow-inner">
+                        <iframe src="https://calendar.google.com/calendar/embed?src=YOUR_CALENDAR_ID_3%40group.calendar.google.com&ctz=Asia%2FBangkok"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="bg-gray-800 text-gray-400 py-6 text-center text-sm mt-12 border-t border-gray-700">
+        <p>© 2026 โรงเรียนพิมานพิทยาสรรค์</p>
+    </footer>
+
+    <script>
+        function switchTab(roomId) {
+            // ซ่อนเนื้อหาทุกแท็บ
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.add('hidden'));
+            
+            // แสดงเนื้อหาแท็บที่เลือก
+            document.getElementById(roomId).classList.remove('hidden');
+
+            // รีเซ็ตปุ่มทั้งหมดเป็นสีปกติ
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-red-700', 'text-white', 'shadow-sm');
+                btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+            });
+
+            // ไฮไลต์ปุ่มที่ถูกเลือก
+            const activeBtn = document.getElementById('btn-' + roomId);
+            activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            activeBtn.classList.add('bg-red-700', 'text-white', 'shadow-sm');
+        }
+    </script>
+</body>
+</html>
