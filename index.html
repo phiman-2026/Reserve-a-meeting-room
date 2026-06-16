@@ -15,7 +15,7 @@
             font-family: 'Prompt', sans-serif;
             background-color: #f0f4f8;
         }
-        /* กรอบปฏิทินแบบ Responsive แสดงผลเต็มเดือนพอดีหน้าจอ ไม่ต้องปัดซ้ายขวา */
+        /* แก้ปัญหาปฏิทินโดนตัดแถวล่าง: ล็อคความสูงแนวตั้งให้พอดีกับ 5-6 สัปดาห์ของ Google Calendar */
         .calendar-wrapper {
             border: 4px solid #1e3a8a;
             border-radius: 1rem;
@@ -27,12 +27,11 @@
         .calendar-container {
             position: relative;
             width: 100%;
-            /* ใช้ aspect-ratio เพื่อความสมบูรณ์แบบบนมือถือและคอมพิวเตอร์ */
-            aspect-ratio: 4 / 3; 
+            height: 520px; /* เพิ่มความสูงคงที่เพื่อให้แสดงปฏิทินได้ครบถ้วนทุกสัปดาห์ในเดือนนั้นๆ บนมือถือ */
         }
         @media (min-width: 768px) {
             .calendar-container {
-                aspect-ratio: 16 / 10;
+                height: 650px; /* ความสูงสำหรับหน้าจอคอมพิวเตอร์ */
             }
         }
         .calendar-container iframe {
@@ -54,6 +53,7 @@
 </head>
 <body>
 
+    <!-- แบนเนอร์ พร้อมโลโก้โรงเรียนจากคลังหลัก -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-blue-800 text-white py-10 md:py-14 px-4 text-center shadow-xl">
         <div class="absolute inset-0 bg-blue-500 opacity-10 pointer-events-none"></div>
         <div class="relative z-10 max-w-4xl mx-auto">
@@ -69,18 +69,20 @@
 
     <div class="max-w-6xl mx-auto px-3 py-6 md:py-10">
         
-        <div class="flex flex-col space-y-2 sm:space-y-0 sm:flex-row justify-center bg-blue-100 p-2 rounded-2xl shadow-inner gap-2 mb-6 md:mb-10 border border-blue-200">
-            <button onclick="switchTab('room1')" id="btn-room1" class="tab-btn py-3 px-4 text-center text-sm md:text-base font-semibold rounded-xl transition-all duration-300 bg-blue-800 text-white shadow-lg w-full sm:flex-1">
-                <i class="fa-solid fa-hotel mr-2"></i>ห้องประชุมศรีพิมาน
+        <!-- ปรับปรุงใหม่: แถบแท็บแนวนอนสไตล์โมบายแอป (กดง่าย และแบ่งสัดส่วนชัดเจน ไม่เรียงเป็นตึกสูงลงมา) -->
+        <div class="grid grid-cols-3 bg-blue-900 p-1.5 rounded-2xl shadow-lg mb-6 md:mb-10 border border-blue-950">
+            <button onclick="switchTab('room1')" id="btn-room1" class="tab-btn py-3 px-1 text-center text-xs sm:text-base font-semibold rounded-xl transition-all duration-300 bg-white text-blue-950 shadow flex flex-col sm:flex-row items-center justify-center gap-1">
+                <i class="fa-solid fa-hotel text-sm sm:text-base"></i><span>ศรีพิมาน</span>
             </button>
-            <button onclick="switchTab('room2')" id="btn-room2" class="tab-btn py-3 px-4 text-center text-sm md:text-base font-semibold rounded-xl transition-all duration-300 text-blue-900 hover:bg-blue-200 w-full sm:flex-1">
-                <i class="fa-solid fa-chalkboard-user mr-2"></i>ห้องประชุมคำแสด
+            <button onclick="switchTab('room2')" id="btn-room2" class="tab-btn py-3 px-1 text-center text-xs sm:text-base font-semibold rounded-xl transition-all duration-300 text-white hover:bg-blue-800/50 flex flex-col sm:flex-row items-center justify-center gap-1">
+                <i class="fa-solid fa-chalkboard-user text-sm sm:text-base"></i><span>คำแสด</span>
             </button>
-            <button onclick="switchTab('room3')" id="btn-room3" class="tab-btn py-3 px-4 text-center text-sm md:text-base font-semibold rounded-xl transition-all duration-300 text-blue-900 hover:bg-blue-200 w-full sm:flex-1">
-                <i class="fa-solid fa-display mr-2"></i>ห้องประชุมเทาแดงรำลึก
+            <button onclick="switchTab('room3')" id="btn-room3" class="tab-btn py-3 px-1 text-center text-xs sm:text-base font-semibold rounded-xl transition-all duration-300 text-white hover:bg-blue-800/50 flex flex-col sm:flex-row items-center justify-center gap-1">
+                <i class="fa-solid fa-display text-sm sm:text-base"></i><span>เทาแดงฯ</span>
             </button>
         </div>
 
+        <!-- แท็บที่ 1: ห้องประชุมศรีพิมาน -->
         <div id="room1" class="tab-content block animate-fadeIn">
             <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-10">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 md:pb-6 mb-6 md:mb-8 gap-4 md:gap-6">
@@ -108,6 +110,7 @@
             </div>
         </div>
 
+        <!-- แท็บที่ 2: ห้องประชุมคำแสด -->
         <div id="room2" class="tab-content hidden animate-fadeIn">
             <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-10">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 md:pb-6 mb-6 md:mb-8 gap-4 md:gap-6">
@@ -135,6 +138,7 @@
             </div>
         </div>
 
+        <!-- แท็บที่ 3: ห้องประชุมเทาแดงรำลึก -->
         <div id="room3" class="tab-content hidden animate-fadeIn">
             <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-10">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 md:pb-6 mb-6 md:mb-8 gap-4 md:gap-6">
@@ -176,20 +180,24 @@
 
     <script>
         function switchTab(roomId) {
+            // ซ่อนเนื้อหาทุกห้องก่อน
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.add('hidden'));
             
+            // แสดงเนื้อหาห้องที่เลือก
             document.getElementById(roomId).classList.remove('hidden');
 
+            // รีเซ็ตปุ่มทั้งหมดให้เป็นสถานะปกติ (พื้นหลังน้ำเงิน ตัวหนังสือขาว)
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => {
-                btn.classList.remove('bg-blue-800', 'text-white', 'shadow-lg');
-                btn.classList.add('text-blue-900', 'hover:bg-blue-200');
+                btn.classList.remove('bg-white', 'text-blue-950', 'shadow');
+                btn.classList.add('text-white', 'hover:bg-blue-800/50');
             });
 
+            // ปรับปุ่มที่ถูกเลือกให้เด่นขึ้น (พื้นหลังขาว ตัวหนังสือสีน้ำเงินเข้ม)
             const activeBtn = document.getElementById('btn-' + roomId);
-            activeBtn.classList.remove('text-blue-900', 'hover:bg-blue-200');
-            activeBtn.classList.add('bg-blue-800', 'text-white', 'shadow-lg');
+            activeBtn.classList.remove('text-white', 'hover:bg-blue-800/50');
+            activeBtn.classList.add('bg-white', 'text-blue-950', 'shadow');
         }
     </script>
 </body>
