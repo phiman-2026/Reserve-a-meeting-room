@@ -15,7 +15,7 @@
             font-family: 'Prompt', sans-serif;
             background-color: #f0f4f8;
         }
-        /* แก้ปัญหาปฏิทินโดนตัดแถวล่าง: ล็อคความสูงแนวตั้งให้พอดีกับ 5-6 สัปดาห์ของ Google Calendar */
+        /* กรอบปฏิทินแบบ Responsive แสดงผลเต็มเดือนพอดีหน้าจอ */
         .calendar-wrapper {
             border: 4px solid #1e3a8a;
             border-radius: 1rem;
@@ -27,7 +27,7 @@
         .calendar-container {
             position: relative;
             width: 100%;
-            height: 520px; /* เพิ่มความสูงคงที่เพื่อให้แสดงปฏิทินได้ครบถ้วนทุกสัปดาห์ในเดือนนั้นๆ บนมือถือ */
+            height: 520px; /* ความสูงพอดีสำหรับหน้าจอมือถือเห็นครบเดือน */
         }
         @media (min-width: 768px) {
             .calendar-container {
@@ -53,24 +53,30 @@
 </head>
 <body>
 
-    <!-- แบนเนอร์ พร้อมโลโก้โรงเรียนจากคลังหลัก -->
-    <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-blue-800 text-white py-10 md:py-14 px-4 text-center shadow-xl">
+    <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-blue-800 text-white py-4 md:py-6 px-4 shadow-xl border-b border-blue-950">
         <div class="absolute inset-0 bg-blue-500 opacity-10 pointer-events-none"></div>
-        <div class="relative z-10 max-w-4xl mx-auto">
-            <div class="flex justify-center mb-4">
-                <div class="bg-white p-2 rounded-full shadow-lg w-24 h-24 md:w-28 md:h-28 flex items-center justify-center border-4 border-blue-200">
+        <div class="relative z-10 max-w-6xl mx-auto flex items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3 text-left">
+                <div class="bg-white p-1 rounded-full shadow-md w-12 h-12 md:w-16 md:h-16 flex items-center justify-center border-2 border-blue-200 flex-shrink-0">
                     <img src="https://raw.githubusercontent.com/phiman-2026/picture/main/logo%20phiman.png" alt="โลโก้โรงเรียนพิมานพิทยาสรรค์" class="w-full h-full object-contain">
                 </div>
+                <div>
+                    <h1 class="text-lg md:text-2xl font-bold tracking-wide drop-shadow">ระบบจองห้องประชุมออนไลน์</h1>
+                    <p class="text-xs md:text-sm text-blue-200 font-light italic">โรงเรียนพิมานพิทยาสรรค์</p>
+                </div>
             </div>
-            <h1 class="text-2xl md:text-5xl font-bold mb-2 tracking-wide drop-shadow-lg">ระบบจองห้องประชุมออนไลน์</h1>
-            <p class="text-base md:text-2xl text-blue-200 font-light italic">โรงเรียนพิมานพิทยาสรรค์</p>
+
+            <div class="hidden sm:block text-blue-300 opacity-40 text-2xl md:text-3xl">
+                <i class="fa-solid fa-laptop-house"></i>
+            </div>
+            
         </div>
     </div>
 
-    <div class="max-w-6xl mx-auto px-3 py-6 md:py-10">
+    <div class="max-w-6xl mx-auto px-3 py-4 md:py-6">
         
-        <!-- ปรับปรุงใหม่: แถบแท็บแนวนอนสไตล์โมบายแอป (กดง่าย และแบ่งสัดส่วนชัดเจน ไม่เรียงเป็นตึกสูงลงมา) -->
-        <div class="grid grid-cols-3 bg-blue-900 p-1.5 rounded-2xl shadow-lg mb-6 md:mb-10 border border-blue-950">
+        <div class="grid grid-cols-3 bg-blue-900 p-1.5 rounded-2xl shadow-lg mb-4 md:mb-6 border border-blue-950">
             <button onclick="switchTab('room1')" id="btn-room1" class="tab-btn py-3 px-1 text-center text-xs sm:text-base font-semibold rounded-xl transition-all duration-300 bg-white text-blue-950 shadow flex flex-col sm:flex-row items-center justify-center gap-1">
                 <i class="fa-solid fa-hotel text-sm sm:text-base"></i><span>ศรีพิมาน</span>
             </button>
@@ -82,22 +88,21 @@
             </button>
         </div>
 
-        <!-- แท็บที่ 1: ห้องประชุมศรีพิมาน -->
         <div id="room1" class="tab-content block animate-fadeIn">
-            <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-10">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 md:pb-6 mb-6 md:mb-8 gap-4 md:gap-6">
+            <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 mb-4 md:mb-6 gap-4">
                     <div>
-                        <h2 class="text-xl md:text-3xl font-bold text-blue-900"><i class="fa-solid fa-door-open text-blue-700 mr-2"></i>ห้องประชุมศรีพิมาน</h2>
-                        <p class="text-sm md:text-lg text-gray-600 mt-1">อาคารเรียน 4</p>
+                        <h2 class="text-xl md:text-2xl font-bold text-blue-900"><i class="fa-solid fa-door-open text-blue-700 mr-2"></i>ห้องประชุมศรีพิมาน</h2>
+                        <p class="text-sm text-gray-600 mt-1">อาคารเรียน 4</p>
                     </div>
-                    <a href="https://forms.gle/GJgtHHgb7jJZm3NJ8" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl md:rounded-2xl shadow-lg transition-all transform active:scale-95 text-sm md:text-base">
+                    <a href="https://forms.gle/GJgtHHgb7jJZm3NJ8" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 hover:to-blue-700 text-white font-bold py-2.5 px-6 rounded-xl shadow shadow-blue-200 transition-all transform active:scale-95 text-sm md:text-base">
                         <i class="fa-regular fa-calendar-check mr-2 text-lg"></i> จองห้องประชุมนี้
                     </a>
                 </div>
 
-                <div class="mt-4 md:mt-8">
-                    <h3 class="text-base md:text-xl font-bold text-gray-800 mb-3 flex items-center">
-                        <span class="w-1.5 h-6 bg-blue-700 rounded-full mr-2"></span>
+                <div class="mt-4">
+                    <h3 class="text-base font-bold text-gray-800 mb-2 flex items-center">
+                        <span class="w-1.5 h-5 bg-blue-700 rounded-full mr-2"></span>
                         ตารางการใช้ห้องประชุมศรีพิมาน
                     </h3>
                     
@@ -110,22 +115,21 @@
             </div>
         </div>
 
-        <!-- แท็บที่ 2: ห้องประชุมคำแสด -->
         <div id="room2" class="tab-content hidden animate-fadeIn">
-            <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-10">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 md:pb-6 mb-6 md:mb-8 gap-4 md:gap-6">
+            <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 mb-4 md:mb-6 gap-4">
                     <div>
-                        <h2 class="text-xl md:text-3xl font-bold text-blue-900"><i class="fa-solid fa-door-open text-blue-700 mr-2"></i>ห้องประชุมคำแสด</h2>
-                        <p class="text-sm md:text-lg text-gray-600 mt-1">ชั้น 2 อาคารเรียน 1</p>
+                        <h2 class="text-xl md:text-2xl font-bold text-blue-900"><i class="fa-solid fa-door-open text-blue-700 mr-2"></i>ห้องประชุมคำแสด</h2>
+                        <p class="text-sm text-gray-600 mt-1">ชั้น 2 อาคารเรียน 1</p>
                     </div>
-                    <a href="https://forms.gle/EGRv589qTyPUkyNP9" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl md:rounded-2xl shadow-lg transition-all transform active:scale-95 text-sm md:text-base">
+                    <a href="https://forms.gle/EGRv589qTyPUkyNP9" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 hover:to-blue-700 text-white font-bold py-2.5 px-6 rounded-xl shadow shadow-blue-200 transition-all transform active:scale-95 text-sm md:text-base">
                         <i class="fa-regular fa-calendar-check mr-2 text-xl"></i> จองห้องประชุมนี้
                     </a>
                 </div>
 
-                <div class="mt-4 md:mt-8">
-                    <h3 class="text-base md:text-xl font-bold text-gray-800 mb-3 flex items-center">
-                        <span class="w-1.5 h-6 bg-blue-700 rounded-full mr-2"></span>
+                <div class="mt-4">
+                    <h3 class="text-base font-bold text-gray-800 mb-2 flex items-center">
+                        <span class="w-1.5 h-5 bg-blue-700 rounded-full mr-2"></span>
                         ตารางการใช้ห้องประชุมคำแสด
                     </h3>
                     
@@ -138,22 +142,21 @@
             </div>
         </div>
 
-        <!-- แท็บที่ 3: ห้องประชุมเทาแดงรำลึก -->
         <div id="room3" class="tab-content hidden animate-fadeIn">
-            <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-10">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 md:pb-6 mb-6 md:mb-8 gap-4 md:gap-6">
+            <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-blue-50 pb-4 mb-4 md:mb-6 gap-4">
                     <div>
-                        <h2 class="text-xl md:text-3xl font-bold text-blue-900"><i class="fa-solid fa-door-open text-blue-700 mr-2"></i>ห้องประชุมเทาแดงรำลึก</h2>
-                        <p class="text-sm md:text-lg text-gray-600 mt-1">อาคารเรียน 3</p>
+                        <h2 class="text-xl md:text-2xl font-bold text-blue-900"><i class="fa-solid fa-door-open text-blue-700 mr-2"></i>ห้องประชุมเทาแดงรำลึก</h2>
+                        <p class="text-sm text-gray-600 mt-1">อาคารเรียน 3</p>
                     </div>
-                    <a href="https://forms.gle/RpLmwpiYbEx1TWYD6" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 hover:to-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl md:rounded-2xl shadow-lg transition-all transform active:scale-95 text-sm md:text-base">
+                    <a href="https://forms.gle/RpLmwpiYbEx1TWYD6" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 hover:to-blue-700 text-white font-bold py-2.5 px-6 rounded-xl shadow shadow-blue-200 transition-all transform active:scale-95 text-sm md:text-base">
                         <i class="fa-regular fa-calendar-check mr-2 text-xl"></i> จองห้องประชุมนี้
                     </a>
                 </div>
 
-                <div class="mt-4 md:mt-8">
-                    <h3 class="text-base md:text-xl font-bold text-gray-800 mb-3 flex items-center">
-                        <span class="w-1.5 h-6 bg-blue-700 rounded-full mr-2"></span>
+                <div class="mt-4">
+                    <h3 class="text-base font-bold text-gray-800 mb-2 flex items-center">
+                        <span class="w-1.5 h-5 bg-blue-700 rounded-full mr-2"></span>
                         ตารางการใช้ห้องประชุมเทาแดงรำลึก
                     </h3>
                     
@@ -168,11 +171,11 @@
 
     </div>
 
-    <footer class="bg-blue-950 text-blue-300 py-8 px-4 text-center text-xs md:text-sm border-t border-blue-900">
+    <footer class="bg-blue-950 text-blue-300 py-6 px-4 text-center text-xs md:text-sm border-t border-blue-900">
         <div class="max-w-4xl mx-auto">
-            <p class="mb-2 text-white font-medium">กลุ่มงานบริหารทั่วไป โรงเรียนพิมานพิทยาสรรค์</p>
+            <p class="mb-1 text-white font-medium">กลุ่มงานบริหารทั่วไป โรงเรียนพิมานพิทยาสรรค์</p>
             <p>จังหวัดสตูล สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาสงขลา สตูล</p>
-            <div class="mt-6 pt-6 border-t border-blue-900/50 text-[10px] md:text-xs text-blue-400">
+            <div class="mt-4 pt-4 border-t border-blue-900/50 text-[10px] md:text-xs text-blue-400">
                 © 2026 Phiman Phitthayasan School. All Rights Reserved.
             </div>
         </div>
@@ -180,21 +183,17 @@
 
     <script>
         function switchTab(roomId) {
-            // ซ่อนเนื้อหาทุกห้องก่อน
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.add('hidden'));
             
-            // แสดงเนื้อหาห้องที่เลือก
             document.getElementById(roomId).classList.remove('hidden');
 
-            // รีเซ็ตปุ่มทั้งหมดให้เป็นสถานะปกติ (พื้นหลังน้ำเงิน ตัวหนังสือขาว)
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => {
                 btn.classList.remove('bg-white', 'text-blue-950', 'shadow');
                 btn.classList.add('text-white', 'hover:bg-blue-800/50');
             });
 
-            // ปรับปุ่มที่ถูกเลือกให้เด่นขึ้น (พื้นหลังขาว ตัวหนังสือสีน้ำเงินเข้ม)
             const activeBtn = document.getElementById('btn-' + roomId);
             activeBtn.classList.remove('text-white', 'hover:bg-blue-800/50');
             activeBtn.classList.add('bg-white', 'text-blue-950', 'shadow');
