@@ -132,7 +132,7 @@
             <div class="w-full">
                 <h3 class="text-base font-bold text-gray-800 mb-3 flex items-center">
                     <span class="w-1.5 h-5 bg-[#001d3d] rounded-full mr-2"></span>
-                    ตารางตรวจสอบวันว่างการใช้ห้องประชุม
+                    <span id="calendar-title">ตารางตรวจสอบวันว่างการใช้ห้องประชุมศรีพิมาน</span>
                 </h3>
                 <div class="calendar-wrapper">
                     <div class="calendar-container">
@@ -240,7 +240,7 @@
     <footer class="bg-[#001d3d] text-blue-300 py-6 px-4 text-center text-xs md:text-sm border-t border-[#003566]">
         <div class="max-w-4xl mx-auto">
             <p class="mb-1 text-white font-medium">กลุ่มงานบริหารทั่วไป โรงเรียนพิมานพิทยาสรรค์</p>
-            <p>สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาสงขลา สตูล</p>
+            <p>จังหวัดสตูล สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาสงขลา สตูล</p>
         </div>
     </footer>
 
@@ -281,11 +281,13 @@
             document.body.style.overflow = 'auto'; 
         }
 
-        // นำโค้ดเดิมทั้งหมดมาครอบ ทำงานได้ 3 ห้องเหมือนเดิมไม่มีเปลี่ยนไอดี
         function switchTab(roomId) {
             document.getElementById('current-room-title').innerHTML = roomData[roomId].title;
             document.getElementById('current-room-location').innerText = roomData[roomId].location;
             document.getElementById('room-calendar-frame').src = roomData[roomId].calendarUrl;
+            
+            // 🛠️ เพิ่มจุดนี้: ปรับเปลี่ยนข้อความตารางตรวจสอบวันว่างตามชื่อห้องที่คลิกเลือก
+            document.getElementById('calendar-title').innerText = "ตารางตรวจสอบวันว่างการใช้" + roomData[roomId].name;
             
             document.getElementById('form-roomType').value = roomId;
 
@@ -359,7 +361,6 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                // 🛠️ ปรับแก้ตรงนี้: ข้อความกระชับ คลีน สวยตามสั่ง มีแค่คำว่า บันทึกการจองสำเร็จค่ะ
                 Swal.fire({
                     icon: 'success',
                     title: 'บันทึกการจองสำเร็จค่ะ',
