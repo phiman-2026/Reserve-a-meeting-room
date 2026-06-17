@@ -50,9 +50,9 @@
             border: 0;
         }
         
-        /* สไตล์สำหรับกล่องป๊อปอัปฟอร์ม (Modal) */
+        /* 🛠️ แก้ไขสไตล์ตรงนี้: บังคับให้ซ่อนตัวถาวรตอนเริ่มต้นหน้าเว็บ */
         .modal-backdrop {
-            display: none;
+            display: none !important; /* ซ่อนไว้ก่อนจนกว่าจะกดปุ่ม */
             position: fixed;
             top: 0;
             left: 0;
@@ -254,17 +254,20 @@
             }
         };
 
-        // ฟังก์ชันสั่งเปิด-ปิดกล่องฟอร์มป๊อปอัป (Modal)
+        // ฟังก์ชันสั่งเปิด-ปิดกล่องฟอร์มป๊อปอัป (Modal) โดยใช้setPropertyเพื่อแก้ปัญหาล้นทับ
         function openBookingModal() {
             const currentRoom = document.getElementById('form-roomType').value;
             document.getElementById('modal-room-name').innerText = roomData[currentRoom].name;
-            document.getElementById('bookingModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // ล็อกไม่ให้เลื่อนหน้าจอหลักเบื้องหลัง
+            
+            const modal = document.getElementById('bookingModal');
+            modal.style.setProperty('display', 'flex', 'important'); // บังคับให้แสดงผลเมื่อกดปุ่ม
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeBookingModal() {
-            document.getElementById('bookingModal').style.display = 'none';
-            document.body.style.overflow = 'auto'; // คืนค่าหน้าจอให้เลื่อนขึ้นลงได้ปกติ
+            const modal = document.getElementById('bookingModal');
+            modal.style.setProperty('display', 'none', 'important'); // บังคับให้ซ่อนตัวเหมือนเดิม
+            document.body.style.overflow = 'auto'; 
         }
 
         function switchTab(roomId) {
@@ -274,7 +277,6 @@
             
             document.getElementById('form-roomType').value = roomId;
 
-            // ตรวจสอบและตั้งค่าเฉพาะห้องศรีพิมาน (room1)
             const emailWrapper = document.getElementById('email-field-wrapper');
             const emailInput = document.getElementById('userEmail');
             if (roomId === 'room1') {
@@ -336,7 +338,7 @@
                 alert("🎉 ส่งข้อมูลการขอจองห้องประชุมเรียบร้อยแล้วค่ะ!\nระบบกำลังทำเอกสาร PDF บันทึกปฏิทิน และส่งข้อความไลน์แจ้งเตือนกลุ่มงานค่ะ");
                 document.getElementById('bookingForm').reset();
                 
-                closeBookingModal(); // 🆕 ปิดป๊อปอัปกลับสู่หน้าปฏิทินสะอาดตาโดยอัตโนมัติเมื่อจองเสร็จ
+                closeBookingModal(); // ปิดฟอร์มกลับไปหน้าจอหลักสะอาดๆ
                 
                 const currentRoom = document.getElementById('form-roomType').value;
                 switchTab(currentRoom);
