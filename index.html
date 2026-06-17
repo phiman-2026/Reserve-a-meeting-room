@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         body {
             font-family: 'Prompt', sans-serif;
@@ -50,9 +52,8 @@
             border: 0;
         }
         
-        /* 🛠️ แก้ไขสไตล์ตรงนี้: บังคับให้ซ่อนตัวถาวรตอนเริ่มต้นหน้าเว็บ */
         .modal-backdrop {
-            display: none !important; /* ซ่อนไว้ก่อนจนกว่าจะกดปุ่ม */
+            display: none !important;
             position: fixed;
             top: 0;
             left: 0;
@@ -65,6 +66,18 @@
         .modal-content {
             max-height: 90vh;
             overflow-y: auto;
+        }
+
+        /* รีสไตล์ SweetAlert2 ให้เข้ากับธีมน้ำเงินของโรงเรียน */
+        .swal2-styled.swal2-confirm {
+            background-color: #003566 !important;
+            border-radius: 0.75rem !important;
+            padding: 0.75rem 2rem !important;
+            font-family: 'Prompt', sans-serif !important;
+        }
+        .swal2-popup {
+            border-radius: 1.5rem !important;
+            font-family: 'Prompt', sans-serif !important;
         }
     </style>
 </head>
@@ -160,7 +173,7 @@
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-phone mr-1 text-slate-400"></i>เบอร์โทรศัพท์ติดต่อกลับ <span class="text-red-500">*</span></label>
-                        <input type="tel" id="userPhone" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                        <input type="text" id="userPhone" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white" placeholder="เช่น 0812345678">
                     </div>
                 </div>
 
@@ -254,19 +267,18 @@
             }
         };
 
-        // ฟังก์ชันสั่งเปิด-ปิดกล่องฟอร์มป๊อปอัป (Modal) โดยใช้setPropertyเพื่อแก้ปัญหาล้นทับ
         function openBookingModal() {
             const currentRoom = document.getElementById('form-roomType').value;
             document.getElementById('modal-room-name').innerText = roomData[currentRoom].name;
             
             const modal = document.getElementById('bookingModal');
-            modal.style.setProperty('display', 'flex', 'important'); // บังคับให้แสดงผลเมื่อกดปุ่ม
+            modal.style.setProperty('display', 'flex', 'important'); 
             document.body.style.overflow = 'hidden'; 
         }
 
         function closeBookingModal() {
             const modal = document.getElementById('bookingModal');
-            modal.style.setProperty('display', 'none', 'important'); // บังคับให้ซ่อนตัวเหมือนเดิม
+            modal.style.setProperty('display', 'none', 'important'); 
             document.body.style.overflow = 'auto'; 
         }
 
@@ -299,6 +311,16 @@
             activeBtn.classList.add('bg-white', 'text-[#001d3d]', 'shadow');
         }
 
+        // 🆕 ฟังก์ชันช่วยจัดรูปแบบวันที่จาก ปปปป-ดด-วว ให้เป็น วว/ดด/ปปปป (เพื่อนำเข้า Sheet แบบไม่มีเวลาพ่วง)
+        function formatDateThai(dateString) {
+            if(!dateString) return "";
+            const parts = dateString.split("-");
+            if(parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`; // จะได้รูปแบบ 18/06/2026 เป๊ะๆ
+            }
+            return dateString;
+        }
+
         function handleFormSubmit(event) {
             event.preventDefault();
             
@@ -312,15 +334,19 @@
             btnIcon.className = "fa-solid fa-spinner fa-spin";
             btnText.innerText = "กำลังนำส่งข้อมูลเข้าระบบ...";
 
+            // 🛠️ ปรับฟอร์แมตวันที่ก่อนส่ง และล็อกเบอร์โทรโดยเติมอัญประกาศเดี่ยว (') นำหน้าเบรกระบบ Sheet Auto Format
+            const rawPhone = document.getElementById('userPhone').value;
+            const safePhone = rawPhone.startsWith("'") ? rawPhone : "'" + rawPhone; 
+
             const payload = {
                 roomType: document.getElementById('form-roomType').value,
                 userEmail: document.getElementById('userEmail').value,
                 userName: document.getElementById('userName').value,
-                userPhone: document.getElementById('userPhone').value,
+                userPhone: safePhone, // เบอร์โทรปลอดภัย เลข 0 ไม่หาย
                 department: document.getElementById('department').value,
                 eventTitle: document.getElementById('eventTitle').value,
-                startDate: document.getElementById('startDate').value,
-                endDate: document.getElementById('endDate').value,
+                startDate: formatDateThai(document.getElementById('startDate').value), // วันที่คลีน ไม่มีเวลาพ่วง
+                endDate: formatDateThai(document.getElementById('endDate').value),     // วันที่คลีน ไม่มีเวลาพ่วง
                 startTime: document.getElementById('startTime').value,
                 endTime: document.getElementById('endTime').value,
                 userCount: document.getElementById('userCount').value,
@@ -335,17 +361,32 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                alert("🎉 ส่งข้อมูลการขอจองห้องประชุมเรียบร้อยแล้วค่ะ!\nระบบกำลังทำเอกสาร PDF บันทึกปฏิทิน และส่งข้อความไลน์แจ้งเตือนกลุ่มงานค่ะ");
+                // 🆕 แจ้งเตือนจองสำเร็จด้วยกล่อง SweetAlert2 สวยงาม หรูหรา ไฮโซ!
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ส่งข้อมูลการจองสำเร็จ!',
+                    html: '<p class="text-sm text-gray-600">ระบบกำลังจัดทำเอกสาร PDF, บันทึกลงปฏิทินกลาง<br>และส่งข้อความแจ้งเตือนผ่านกลุ่มไลน์เรียบร้อยแล้วค่ะ 🎉</p>',
+                    confirmButtonText: 'ตกลง',
+                    customClass: {
+                        popup: 'swal2-popup',
+                        confirmButton: 'swal2-styled swal2-confirm'
+                    }
+                });
+
                 document.getElementById('bookingForm').reset();
-                
-                closeBookingModal(); // ปิดฟอร์มกลับไปหน้าจอหลักสะอาดๆ
+                closeBookingModal(); 
                 
                 const currentRoom = document.getElementById('form-roomType').value;
                 switchTab(currentRoom);
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อระบบหลังบ้าน กรุณาลองใหม่อีกครั้งค่ะ");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด!',
+                    text: 'ไม่สามารถเชื่อมต่อระบบหลังบ้านได้ กรุณาลองใหม่อีกครั้งค่ะ',
+                    confirmButtonText: 'รับทราบ'
+                });
             })
             .finally(() => {
                 submitBtn.disabled = false;
