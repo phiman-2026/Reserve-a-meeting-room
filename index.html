@@ -68,7 +68,6 @@
             overflow-y: auto;
         }
 
-        /* รีสไตล์ SweetAlert2 ให้เข้ากับธีมน้ำเงินของโรงเรียน */
         .swal2-styled.swal2-confirm {
             background-color: #003566 !important;
             border-radius: 0.75rem !important;
@@ -297,7 +296,7 @@
             } else {
                 emailWrapper.style.display = 'none';
                 emailInput.required = false;
-                emailInput.value = '';
+                // 🛠️ แก้ไขจุดนี้: นำคำสั่งรีเซ็ตค่าว่างออกชั่วคราว เพื่อป้องกันไม่ให้กระทบการดึงค่าตอนกดบันทึก
             }
 
             const buttons = document.querySelectorAll('.tab-btn');
@@ -311,12 +310,12 @@
             activeBtn.classList.add('bg-white', 'text-[#001d3d]', 'shadow');
         }
 
-        // 🆕 ฟังก์ชันช่วยจัดรูปแบบวันที่จาก ปปปป-ดด-วว ให้เป็น วว/ดด/ปปปป (เพื่อนำเข้า Sheet แบบไม่มีเวลาพ่วง)
+        // 🛠️ ฟังก์ชันช่วยจัดฟอร์แมตวันที่ให้ออกมาเป็น วว/ดด/ปปปป สวยงาม คลีน แม่นยำไม่มีเวลาแฝง
         function formatDateThai(dateString) {
-            if(!dateString) return "";
+            if(!dateString || dateString === "") return "";
             const parts = dateString.split("-");
             if(parts.length === 3) {
-                return `${parts[2]}/${parts[1]}/${parts[0]}`; // จะได้รูปแบบ 18/06/2026 เป๊ะๆ
+                return `${parts[2]}/${parts[1]}/${parts[0]}`; 
             }
             return dateString;
         }
@@ -330,23 +329,34 @@
             const btnIcon = document.getElementById('btn-icon');
             const btnText = document.getElementById('btn-text');
 
+            // 🛠️ เพิ่มดักจับ: หากผู้ใช้กรอกวันที่ไม่สมบูรณ์ จะไม่ให้ระเบิดกลายเป็น 1970
+            const rawStart = document.getElementById('startDate').value;
+            const rawEnd = document.getElementById('endDate').value;
+            
+            if(!rawStart || !rawEnd) {
+                Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณาระบุวันที่เริ่มและสิ้นสุดให้ถูกต้องค่ะ' });
+                return;
+            }
+
             submitBtn.disabled = true;
             btnIcon.className = "fa-solid fa-spinner fa-spin";
             btnText.innerText = "กำลังนำส่งข้อมูลเข้าระบบ...";
 
-            // 🛠️ ปรับฟอร์แมตวันที่ก่อนส่ง และล็อกเบอร์โทรโดยเติมอัญประกาศเดี่ยว (') นำหน้าเบรกระบบ Sheet Auto Format
             const rawPhone = document.getElementById('userPhone').value;
             const safePhone = rawPhone.startsWith("'") ? rawPhone : "'" + rawPhone; 
 
+            // สำหรับห้องอื่นๆ ที่ไม่มีช่องอีเมล ให้ส่งค่าข้อความว่า "-" ไปแทน เพื่อเลี่ยงค่าว่างระเบิดในชีท
+            const finalEmail = document.getElementById('form-roomType').value === 'room1' ? document.getElementById('userEmail').value : "-";
+
             const payload = {
                 roomType: document.getElementById('form-roomType').value,
-                userEmail: document.getElementById('userEmail').value,
+                userEmail: finalEmail,
                 userName: document.getElementById('userName').value,
-                userPhone: safePhone, // เบอร์โทรปลอดภัย เลข 0 ไม่หาย
+                userPhone: safePhone, 
                 department: document.getElementById('department').value,
                 eventTitle: document.getElementById('eventTitle').value,
-                startDate: formatDateThai(document.getElementById('startDate').value), // วันที่คลีน ไม่มีเวลาพ่วง
-                endDate: formatDateThai(document.getElementById('endDate').value),     // วันที่คลีน ไม่มีเวลาพ่วง
+                startDate: formatDateThai(rawStart), // แปลงให้ตรงฟอร์แมตแม่นยำ 3 ห้อง
+                endDate: formatDateThai(rawEnd),     // แปลงให้ตรงฟอร์แมตแม่นยำ 3 ห้อง
                 startTime: document.getElementById('startTime').value,
                 endTime: document.getElementById('endTime').value,
                 userCount: document.getElementById('userCount').value,
@@ -361,11 +371,10 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                // 🆕 แจ้งเตือนจองสำเร็จด้วยกล่อง SweetAlert2 สวยงาม หรูหรา ไฮโซ!
                 Swal.fire({
                     icon: 'success',
                     title: 'ส่งข้อมูลการจองสำเร็จ!',
-                    html: '<p class="text-sm text-gray-600">ระบบกำลังจัดทำเอกสาร PDF, บันทึกลงปฏิทินกลาง<br>และส่งข้อความแจ้งเตือนผ่านกลุ่มไลน์เรียบร้อยแล้วค่ะ 🎉</p>',
+                    html: '<p class="text-sm text-gray-600">ระบบทำการบันทึกลงปฏิทินกลางเรียบร้อยแล้วค่ะ 🎉<br>รวมถึงเอกสาร PDF และการแจ้งเตือนกลุ่มไลน์ถูกส่งแล้วจ้า</p>',
                     confirmButtonText: 'ตกลง',
                     customClass: {
                         popup: 'swal2-popup',
