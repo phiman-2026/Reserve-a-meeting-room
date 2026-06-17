@@ -144,15 +144,15 @@
         </div>
     </div>
 
-    <div id="bookingModal" class="modal-backdrop flex items-center justify-center p-3">
+    <div id="bookingModal" class="modal-backdrop flex items-center justify-center p-2 sm:p-3">
         <div class="bg-white w-full max-w-2xl rounded-2xl md:rounded-3xl shadow-2xl border border-blue-200 modal-content animate-fadeIn">
             
-            <div class="bg-[#001d3d] text-white p-4 md:p-5 rounded-t-2xl md:rounded-t-3xl flex justify-between items-center sticky top-0 z-10 shadow">
-                <h3 class="text-base md:text-lg font-bold flex items-center">
-                    <i class="fa-regular fa-calendar-check mr-2 text-blue-400 text-lg"></i>
-                    แบบฟอร์มส่งข้อมูลการขอใช้ <span id="modal-room-name" class="text-amber-300 ml-1">ห้องประชุมศรีพิมาน</span>
+            <div class="bg-[#001d3d] text-white p-3 md:p-5 rounded-t-2xl md:rounded-t-3xl flex justify-between items-center sticky top-0 z-10 shadow whitespace-nowrap">
+                <h3 class="text-[11px] sm:text-sm md:text-lg font-bold flex items-center overflow-hidden text-ellipsis">
+                    <i class="fa-regular fa-calendar-check mr-1.5 text-blue-400 text-sm md:text-lg"></i>
+                    ฟอร์มขอใช้: <span id="modal-room-name" class="text-amber-300 ml-1">ห้องประชุมศรีพิมาน</span>
                 </h3>
-                <button onclick="closeBookingModal()" class="text-gray-300 hover:text-white transition-all text-xl p-1 bg-white/10 hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center">
+                <button onclick="closeBookingModal()" class="text-gray-300 hover:text-white transition-all text-base md:text-xl p-1 bg-white/10 hover:bg-white/20 rounded-full w-6 h-6 md:w-8 md:h-8 flex items-center justify-center ml-2 flex-shrink-0">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -199,11 +199,11 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>เวลาเริ่มประชุม <span class="text-red-500">*</span></label>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>เวลาเริ่ม <span class="text-red-500">*</span></label>
                         <input type="time" id="startTime" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
                     </div>
                     <div>
-                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>เวลาเลิกประชุม <span class="text-red-500">*</span></label>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>เวลาเลิก <span class="text-red-500">*</span></label>
                         <input type="time" id="endTime" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
                     </div>
                 </div>
@@ -224,12 +224,12 @@
                     <textarea id="note" rows="2" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"></textarea>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 pt-2 border-t">
-                    <button type="button" onclick="closeBookingModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-gray-700 font-bold py-3 px-4 rounded-xl shadow transition-all active:scale-95 text-center">
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t text-center font-bold whitespace-nowrap">
+                    <button type="button" onclick="closeBookingModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-gray-700 py-3 px-2 rounded-xl shadow transition-all active:scale-95 text-xs sm:text-base">
                         ยกเลิก
                     </button>
-                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-[#003566] to-[#001d3d] hover:from-[#001d3d] hover:to-[#003566] text-white font-bold py-3 px-4 rounded-xl shadow transition-all transform active:scale-95 flex items-center justify-center gap-2">
-                        <i id="btn-icon" class="fa-regular fa-paper-plane"></i>
+                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-[#003566] to-[#001d3d] hover:from-[#001d3d] hover:to-[#003566] text-white py-3 px-1 sm:px-4 rounded-xl shadow transition-all transform active:scale-95 flex items-center justify-center gap-1 text-[11px] sm:text-base">
+                        <i id="btn-icon" class="fa-regular fa-paper-plane text-xs sm:text-base"></i>
                         <span id="btn-text">ยืนยันส่งข้อมูลการจอง</span>
                     </button>
                 </div>
@@ -240,7 +240,7 @@
     <footer class="bg-[#001d3d] text-blue-300 py-6 px-4 text-center text-xs md:text-sm border-t border-[#003566]">
         <div class="max-w-4xl mx-auto">
             <p class="mb-1 text-white font-medium">กลุ่มงานบริหารทั่วไป โรงเรียนพิมานพิทยาสรรค์</p>
-            <p>จังหวัดสตูล สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาสงขลา สตูล</p>
+            <p>สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาสงขลา สตูล</p>
         </div>
     </footer>
 
@@ -281,6 +281,7 @@
             document.body.style.overflow = 'auto'; 
         }
 
+        // นำโค้ดเดิมทั้งหมดมาครอบ ทำงานได้ 3 ห้องเหมือนเดิมไม่มีเปลี่ยนไอดี
         function switchTab(roomId) {
             document.getElementById('current-room-title').innerHTML = roomData[roomId].title;
             document.getElementById('current-room-location').innerText = roomData[roomId].location;
@@ -328,12 +329,11 @@
 
             submitBtn.disabled = true;
             btnIcon.className = "fa-solid fa-spinner fa-spin";
-            btnText.innerText = "กำลังนำส่งข้อมูลเข้าระบบ...";
+            btnText.innerText = "กำลังส่งข้อมูล...";
 
             const rawPhone = document.getElementById('userPhone').value;
             const safePhone = rawPhone.startsWith("'") ? rawPhone : "'" + rawPhone; 
 
-            // ตรวจสอบห้องศรีพิมาน ถ้าห้องอื่นไม่มีอีเมล ให้ส่งเครื่องหมายแดช (-) เพื่อไม่ให้ค่าว่างทำระบบเพี้ยน
             const finalEmail = document.getElementById('form-roomType').value === 'room1' ? document.getElementById('userEmail').value : "-";
 
             const payload = {
@@ -343,7 +343,6 @@
                 userPhone: safePhone, 
                 department: document.getElementById('department').value,
                 eventTitle: document.getElementById('eventTitle').value,
-                // 🛠️ ปรับจุดนี้: ส่งเป็น ISO Date String (YYYY-MM-DD) เปล่าๆ ปราศจากข้อมูลเวลาแฝง
                 startDate: rawStart, 
                 endDate: rawEnd,     
                 startTime: document.getElementById('startTime').value,
@@ -360,10 +359,10 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
+                // 🛠️ ปรับแก้ตรงนี้: ข้อความกระชับ คลีน สวยตามสั่ง มีแค่คำว่า บันทึกการจองสำเร็จค่ะ
                 Swal.fire({
                     icon: 'success',
-                    title: 'ส่งข้อมูลการจองสำเร็จ!',
-                    html: '<p class="text-sm text-gray-600">ระบบทำการบันทึกลงปฏิทินกลางเรียบร้อยแล้วค่ะ 🎉<br>รวมถึงเอกสาร PDF และการแจ้งเตือนกลุ่มไลน์ถูกส่งแล้วจ้า</p>',
+                    title: 'บันทึกการจองสำเร็จค่ะ',
                     confirmButtonText: 'ตกลง',
                     customClass: {
                         popup: 'swal2-popup',
@@ -388,7 +387,7 @@
             })
             .finally(() => {
                 submitBtn.disabled = false;
-                btnIcon.className = "fa-regular fa-paper-plane";
+                btnIcon.className = "fa-regular fa-paper-plane text-xs sm:text-base";
                 btnText.innerText = "ยืนยันส่งข้อมูลการจอง";
             });
         }
