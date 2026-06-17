@@ -296,7 +296,6 @@
             } else {
                 emailWrapper.style.display = 'none';
                 emailInput.required = false;
-                // 🛠️ แก้ไขจุดนี้: นำคำสั่งรีเซ็ตค่าว่างออกชั่วคราว เพื่อป้องกันไม่ให้กระทบการดึงค่าตอนกดบันทึก
             }
 
             const buttons = document.querySelectorAll('.tab-btn');
@@ -310,16 +309,6 @@
             activeBtn.classList.add('bg-white', 'text-[#001d3d]', 'shadow');
         }
 
-        // 🛠️ ฟังก์ชันช่วยจัดฟอร์แมตวันที่ให้ออกมาเป็น วว/ดด/ปปปป สวยงาม คลีน แม่นยำไม่มีเวลาแฝง
-        function formatDateThai(dateString) {
-            if(!dateString || dateString === "") return "";
-            const parts = dateString.split("-");
-            if(parts.length === 3) {
-                return `${parts[2]}/${parts[1]}/${parts[0]}`; 
-            }
-            return dateString;
-        }
-
         function handleFormSubmit(event) {
             event.preventDefault();
             
@@ -329,7 +318,6 @@
             const btnIcon = document.getElementById('btn-icon');
             const btnText = document.getElementById('btn-text');
 
-            // 🛠️ เพิ่มดักจับ: หากผู้ใช้กรอกวันที่ไม่สมบูรณ์ จะไม่ให้ระเบิดกลายเป็น 1970
             const rawStart = document.getElementById('startDate').value;
             const rawEnd = document.getElementById('endDate').value;
             
@@ -345,7 +333,7 @@
             const rawPhone = document.getElementById('userPhone').value;
             const safePhone = rawPhone.startsWith("'") ? rawPhone : "'" + rawPhone; 
 
-            // สำหรับห้องอื่นๆ ที่ไม่มีช่องอีเมล ให้ส่งค่าข้อความว่า "-" ไปแทน เพื่อเลี่ยงค่าว่างระเบิดในชีท
+            // ตรวจสอบห้องศรีพิมาน ถ้าห้องอื่นไม่มีอีเมล ให้ส่งเครื่องหมายแดช (-) เพื่อไม่ให้ค่าว่างทำระบบเพี้ยน
             const finalEmail = document.getElementById('form-roomType').value === 'room1' ? document.getElementById('userEmail').value : "-";
 
             const payload = {
@@ -355,8 +343,9 @@
                 userPhone: safePhone, 
                 department: document.getElementById('department').value,
                 eventTitle: document.getElementById('eventTitle').value,
-                startDate: formatDateThai(rawStart), // แปลงให้ตรงฟอร์แมตแม่นยำ 3 ห้อง
-                endDate: formatDateThai(rawEnd),     // แปลงให้ตรงฟอร์แมตแม่นยำ 3 ห้อง
+                // 🛠️ ปรับจุดนี้: ส่งเป็น ISO Date String (YYYY-MM-DD) เปล่าๆ ปราศจากข้อมูลเวลาแฝง
+                startDate: rawStart, 
+                endDate: rawEnd,     
                 startTime: document.getElementById('startTime').value,
                 endTime: document.getElementById('endTime').value,
                 userCount: document.getElementById('userCount').value,
