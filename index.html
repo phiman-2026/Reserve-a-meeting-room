@@ -49,12 +49,22 @@
             height: 100%;
             border: 0;
         }
-        .animate-fadeIn {
-            animation: fadeIn 0.4s ease-in-out;
+        
+        /* สไตล์สำหรับกล่องป๊อปอัปฟอร์ม (Modal) */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 29, 61, 0.6);
+            z-index: 50;
+            backdrop-filter: blur(4px);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -93,106 +103,125 @@
 
         <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-blue-100 p-4 md:p-6 mb-6">
             
-            <div class="border-b-2 border-blue-50 pb-4 mb-4 md:mb-6">
-                <h2 id="current-room-title" class="text-xl md:text-2xl font-bold text-[#001d3d]">
-                    <i class="fa-solid fa-door-open text-blue-600 mr-2"></i>ห้องประชุมศรีพิมาน
-                </h2>
-                <p id="current-room-location" class="text-sm text-gray-600 mt-1">อาคารเรียน 4</p>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-blue-50 pb-4 mb-4 md:mb-6 gap-3">
+                <div>
+                    <h2 id="current-room-title" class="text-xl md:text-2xl font-bold text-[#001d3d]">
+                        <i class="fa-solid fa-door-open text-blue-600 mr-2"></i>ห้องประชุมศรีพิมาน
+                    </h2>
+                    <p id="current-room-location" class="text-sm text-gray-600 mt-1">อาคารเรียน 4</p>
+                </div>
+                
+                <button onclick="openBookingModal()" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-[#003566] hover:from-[#003566] hover:to-blue-600 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-all transform active:scale-95 flex items-center justify-center gap-2 text-sm sm:text-base animate-pulse">
+                    <i class="fa-regular fa-calendar-plus text-lg"></i>
+                    <span>กดเพื่อจองห้องประชุมนี้</span>
+                </button>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="text-base font-bold text-gray-800 mb-3 flex items-center">
-                        <span class="w-1.5 h-5 bg-[#001d3d] rounded-full mr-2"></span>
-                        ตารางการใช้ห้องประชุม
-                    </h3>
-                    <div class="calendar-wrapper">
-                        <div class="calendar-container">
-                            <iframe id="room-calendar-frame" src="https://calendar.google.com/calendar/embed?src=c_3b23817944a47f6ba053f7714168acd9052c84af7adf8857ee3f557be81ba07f%40group.calendar.google.com&ctz=Asia%2FBangkok&mode=MONTH"></iframe>
-                        </div>
+            <div class="w-full">
+                <h3 class="text-base font-bold text-gray-800 mb-3 flex items-center">
+                    <span class="w-1.5 h-5 bg-[#001d3d] rounded-full mr-2"></span>
+                    ตารางตรวจสอบวันว่างการใช้ห้องประชุม
+                </h3>
+                <div class="calendar-wrapper">
+                    <div class="calendar-container">
+                        <iframe id="room-calendar-frame" src="https://calendar.google.com/calendar/embed?src=c_3b23817944a47f6ba053f7714168acd9052c84af7adf8857ee3f557be81ba07f%40group.calendar.google.com&ctz=Asia%2FBangkok&mode=MONTH"></iframe>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="bookingModal" class="modal-backdrop flex items-center justify-center p-3">
+        <div class="bg-white w-full max-w-2xl rounded-2xl md:rounded-3xl shadow-2xl border border-blue-200 modal-content animate-fadeIn">
+            
+            <div class="bg-[#001d3d] text-white p-4 md:p-5 rounded-t-2xl md:rounded-t-3xl flex justify-between items-center sticky top-0 z-10 shadow">
+                <h3 class="text-base md:text-lg font-bold flex items-center">
+                    <i class="fa-regular fa-calendar-check mr-2 text-blue-400 text-lg"></i>
+                    แบบฟอร์มส่งข้อมูลการขอใช้ <span id="modal-room-name" class="text-amber-300 ml-1">ห้องประชุมศรีพิมาน</span>
+                </h3>
+                <button onclick="closeBookingModal()" class="text-gray-300 hover:text-white transition-all text-xl p-1 bg-white/10 hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <form id="bookingForm" onsubmit="handleFormSubmit(event)" class="p-4 md:p-6 space-y-4 text-sm">
+                <input type="hidden" id="form-roomType" value="room1">
+
+                <div id="email-field-wrapper">
+                    <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-envelope mr-1 text-slate-400"></i>อีเมลผู้จอง (สำหรับห้องศรีพิมาน) <span class="text-red-500">*</span></label>
+                    <input type="email" id="userEmail" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white" placeholder="example@gmail.com">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-user mr-1 text-slate-400"></i>ชื่อ-สกุล ผู้จอง <span class="text-red-500">*</span></label>
+                        <input type="text" id="userName" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-phone mr-1 text-slate-400"></i>เบอร์โทรศัพท์ติดต่อกลับ <span class="text-red-500">*</span></label>
+                        <input type="tel" id="userPhone" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-200 shadow-inner">
-                    <h3 class="text-base font-bold text-gray-800 mb-4 flex items-center border-b pb-2">
-                        <i class="fa-regular fa-calendar-check mr-2 text-blue-700 text-lg"></i>
-                        แบบฟอร์มส่งข้อมูลการขอใช้ห้องประชุม
-                    </h3>
-                    
-                    <form id="bookingForm" onsubmit="handleFormSubmit(event)" class="space-y-4 text-sm">
-                        <input type="hidden" id="form-roomType" value="room1">
-
-                        <div id="email-field-wrapper">
-                            <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-envelope mr-1 text-slate-400"></i>อีเมลผู้จอง (สำหรับห้องศรีพิมาน) <span class="text-red-500">*</span></label>
-                            <input type="email" id="userEmail" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white" placeholder="example@gmail.com">
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-user mr-1 text-slate-400"></i>ชื่อ-สกุล ผู้จอง <span class="text-red-500">*</span></label>
-                                <input type="text" id="userName" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-phone mr-1 text-slate-400"></i>เบอร์โทรศัพท์ติดต่อกลับ <span class="text-red-500">*</span></label>
-                                <input type="tel" id="userPhone" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-users-rectangle mr-1 text-slate-400"></i>กลุ่มงาน/กลุ่มสาระฯ/หน่วยงาน <span class="text-red-500">*</span></label>
-                            <input type="text" id="department" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
-                        </div>
-
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-comment-dots mr-1 text-slate-400"></i>หัวข้อการประชุม <span class="text-red-500">*</span></label>
-                            <input type="text" id="eventTitle" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white" placeholder="เช่น ประชุมชี้แจงการจัดการศึกษาประจำปี">
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-calendar-days mr-1 text-slate-400"></i>วันที่เริ่ม <span class="text-red-500">*</span></label>
-                                <input type="date" id="startDate" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-calendar-xmark mr-1 text-slate-400"></i>วันที่สิ้นสุด <span class="text-red-500">*</span></label>
-                                <input type="date" id="endDate" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>เวลาเริ่มประชุม <span class="text-red-500">*</span></label>
-                                <input type="time" id="startTime" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>เวลาเลิกประชุม <span class="text-red-500">*</span></label>
-                                <input type="time" id="endTime" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-people-group mr-1 text-slate-400"></i>จำนวนผู้เข้าร่วม (คน) <span class="text-red-500">*</span></label>
-                                <input type="number" id="userCount" required min="1" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-photo-film mr-1 text-slate-400"></i>สื่ออุปกรณ์ที่ต้องการใช้ <span class="text-red-500">*</span></label>
-                                <input type="text" id="mediaEquipment" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white" placeholder="เช่น จอ LED, ไมโครโฟน, ไม่มี">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-note-sticky mr-1 text-slate-400"></i>หมายเหตุเพิ่มเติม</label>
-                            <textarea id="note" rows="2" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"></textarea>
-                        </div>
-
-                        <button type="submit" id="submitBtn" class="w-full mt-2 bg-gradient-to-r from-[#003566] to-[#001d3d] hover:from-[#001d3d] hover:to-[#003566] text-white font-bold py-3 px-6 rounded-xl shadow transition-all transform active:scale-95 flex items-center justify-center gap-2">
-                            <i id="btn-icon" class="fa-regular fa-paper-plane"></i>
-                            <span id="btn-text">ส่งข้อมูลการจองห้องประชุม</span>
-                        </button>
-                    </form>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-users-rectangle mr-1 text-slate-400"></i>กลุ่มงาน/กลุ่มสาระฯ/หน่วยงาน <span class="text-red-500">*</span></label>
+                    <input type="text" id="department" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
                 </div>
-            </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-comment-dots mr-1 text-slate-400"></i>หัวข้อการประชุม <span class="text-red-500">*</span></label>
+                    <input type="text" id="eventTitle" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white" placeholder="เช่น ประชุมชี้แจงการจัดการศึกษาประจำปี">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-calendar-days mr-1 text-slate-400"></i>วันที่เริ่ม <span class="text-red-500">*</span></label>
+                        <input type="date" id="startDate" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-calendar-xmark mr-1 text-slate-400"></i>วันที่สิ้นสุด <span class="text-red-500">*</span></label>
+                        <input type="date" id="endDate" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>เวลาเริ่มประชุม <span class="text-red-500">*</span></label>
+                        <input type="time" id="startTime" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>เวลาเลิกประชุม <span class="text-red-500">*</span></label>
+                        <input type="time" id="endTime" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-people-group mr-1 text-slate-400"></i>จำนวนผู้เข้าร่วม (คน) <span class="text-red-500">*</span></label>
+                        <input type="number" id="userCount" required min="1" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1"><i class="fa-solid fa-photo-film mr-1 text-slate-400"></i>สื่ออุปกรณ์ที่ต้องการใช้ <span class="text-red-500">*</span></label>
+                        <input type="text" id="mediaEquipment" required class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white" placeholder="เช่น จอ LED, ไมโครโฟน, ไม่มี">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1"><i class="fa-regular fa-note-sticky mr-1 text-slate-400"></i>หมายเหตุเพิ่มเติม</label>
+                    <textarea id="note" rows="2" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-2 border-t">
+                    <button type="button" onclick="closeBookingModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-gray-700 font-bold py-3 px-4 rounded-xl shadow transition-all active:scale-95 text-center">
+                        ยกเลิก
+                    </button>
+                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-[#003566] to-[#001d3d] hover:from-[#001d3d] hover:to-[#003566] text-white font-bold py-3 px-4 rounded-xl shadow transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                        <i id="btn-icon" class="fa-regular fa-paper-plane"></i>
+                        <span id="btn-text">ยืนยันส่งข้อมูลการจอง</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -206,21 +235,37 @@
     <script>
         const roomData = {
             'room1': {
+                name: 'ห้องประชุมศรีพิมาน',
                 title: '<i class="fa-solid fa-door-open text-blue-600 mr-2"></i>ห้องประชุมศรีพิมาน',
                 location: 'อาคารเรียน 4',
                 calendarUrl: 'https://calendar.google.com/calendar/embed?src=c_3b23817944a47f6ba053f7714168acd9052c84af7adf8857ee3f557be81ba07f%40group.calendar.google.com&ctz=Asia%2FBangkok&mode=MONTH'
             },
             'room2': {
+                name: 'ห้องประชุมคำแสด',
                 title: '<i class="fa-solid fa-door-open text-blue-600 mr-2"></i>ห้องประชุมคำแสด',
                 location: 'ชั้น 2 อาคารเรียน 1',
                 calendarUrl: 'https://calendar.google.com/calendar/embed?src=c_e33aaa3381687c846f5d61d2e4f49162b802063dcbbd8df99eec54500f37de74%40group.calendar.google.com&ctz=Asia%2FBangkok&mode=MONTH'
             },
             'room3': {
+                name: 'ห้องประชุมเทาแดงรำลึก',
                 title: '<i class="fa-solid fa-door-open text-blue-600 mr-2"></i>ห้องประชุมเทาแดงรำลึก',
                 location: 'อาคารเรียน 3',
                 calendarUrl: 'https://calendar.google.com/calendar/embed?src=c_9f59737ccd4dfa2f554d75e7f439f44c967f01830a9e7123781c3f9f1b5b8616%40group.calendar.google.com&ctz=Asia%2FBangkok&mode=MONTH'
             }
         };
+
+        // ฟังก์ชันสั่งเปิด-ปิดกล่องฟอร์มป๊อปอัป (Modal)
+        function openBookingModal() {
+            const currentRoom = document.getElementById('form-roomType').value;
+            document.getElementById('modal-room-name').innerText = roomData[currentRoom].name;
+            document.getElementById('bookingModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // ล็อกไม่ให้เลื่อนหน้าจอหลักเบื้องหลัง
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // คืนค่าหน้าจอให้เลื่อนขึ้นลงได้ปกติ
+        }
 
         function switchTab(roomId) {
             document.getElementById('current-room-title').innerHTML = roomData[roomId].title;
@@ -229,7 +274,7 @@
             
             document.getElementById('form-roomType').value = roomId;
 
-            // ตรวจสอบเพื่อเปิด-ปิด ช่องกรอกอีเมลเฉพาะห้องศรีพิมาน (room1)
+            // ตรวจสอบและตั้งค่าเฉพาะห้องศรีพิมาน (room1)
             const emailWrapper = document.getElementById('email-field-wrapper');
             const emailInput = document.getElementById('userEmail');
             if (roomId === 'room1') {
@@ -238,7 +283,7 @@
             } else {
                 emailWrapper.style.display = 'none';
                 emailInput.required = false;
-                emailInput.value = ''; // เคลียร์ค่าออกถ้าไม่ใช่ห้องศรีพิมาน
+                emailInput.value = '';
             }
 
             const buttons = document.querySelectorAll('.tab-btn');
@@ -265,10 +310,9 @@
             btnIcon.className = "fa-solid fa-spinner fa-spin";
             btnText.innerText = "กำลังนำส่งข้อมูลเข้าระบบ...";
 
-            // เก็บรวบรวมข้อมูล
             const payload = {
                 roomType: document.getElementById('form-roomType').value,
-                userEmail: document.getElementById('userEmail').value, // จะส่งค่าไปเฉพาะห้องศรีพิมาน ถ้าห้องอื่นจะเป็นค่าว่าง ""
+                userEmail: document.getElementById('userEmail').value,
                 userName: document.getElementById('userName').value,
                 userPhone: document.getElementById('userPhone').value,
                 department: document.getElementById('department').value,
@@ -292,7 +336,8 @@
                 alert("🎉 ส่งข้อมูลการขอจองห้องประชุมเรียบร้อยแล้วค่ะ!\nระบบกำลังทำเอกสาร PDF บันทึกปฏิทิน และส่งข้อความไลน์แจ้งเตือนกลุ่มงานค่ะ");
                 document.getElementById('bookingForm').reset();
                 
-                // สั่งรีเฟรชแท็บปัจจุบันใหม่อีกครั้ง
+                closeBookingModal(); // 🆕 ปิดป๊อปอัปกลับสู่หน้าปฏิทินสะอาดตาโดยอัตโนมัติเมื่อจองเสร็จ
+                
                 const currentRoom = document.getElementById('form-roomType').value;
                 switchTab(currentRoom);
             })
@@ -303,7 +348,7 @@
             .finally(() => {
                 submitBtn.disabled = false;
                 btnIcon.className = "fa-regular fa-paper-plane";
-                btnText.innerText = "ส่งข้อมูลการจองห้องประชุม";
+                btnText.innerText = "ยืนยันส่งข้อมูลการจอง";
             });
         }
     </script>
